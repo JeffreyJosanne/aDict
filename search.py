@@ -6,14 +6,26 @@ def wordIn(word, phrase):
 
 
 def search(query):
+    time = ''
     for file in os.listdir('subs/'):
-        with codecs.open('subs/' + file, 'r', 'utf8') as lines:
-            for line in lines:
-                wordLists = line.split()
-                for word in wordLists:
-                    re.sub('[^A-Za-z0-9]+', '', word)
-                    if query is word:
-                        print(line)
+        filePointer = codecs.open('subs/' + file, 'r', 'utf8')
+        lines = filePointer.readlines()
+        for i in range(0, len(lines)):
+            line = lines[i]
+            wordLists = line.split()
+            for word in wordLists:
+                re.sub('[^A-Za-z0-9]+', '', word)
+                if query in word:
+                    iterator = i
+                    while True:
+                        textFromLines = lines[iterator].split()
+                        iterator = iterator - 1
+                        if '-->' in textFromLines:
+                            break
+                        del textFromLines[:]
+                    time = textFromLines[0]
+                    break
+    print(time)
 
 
-search('Hey')
+search('me')
