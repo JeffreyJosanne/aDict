@@ -1,4 +1,4 @@
-import os, codecs, re
+import os, codecs, re, csv
 from datetime import timedelta
 def wordIn(word, phrase):
     return word in phrase.split()
@@ -25,7 +25,7 @@ def search(query):
                     time = textFromLines[0]
                     # print(line)
                     break
-    return (time)
+    return time
 
 def stringToTimedelta(string):
     timeFormats = string.split(':')
@@ -37,8 +37,11 @@ def stringToTimedelta(string):
 
 def getScene(query):
     for file in os.listdir('sceneCuts/'):
-        with codecs.open('sceneCuts/' + file, 'r', 'utf8') as file:
+        with csv.DictReader(file, delimiter=',') as reader:
             timeFormat = search(query)
-            print(stringToTimedelta(timeFormat))
+            timeToSearch = stringToTimedelta(timeFormat)
+            for line in reader:
+                print(line["first_name"])
+
 
 getScene('Hey')
