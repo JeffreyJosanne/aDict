@@ -1,12 +1,11 @@
 import os, codecs, re
-
-
+from datetime import timedelta
 def wordIn(word, phrase):
     return word in phrase.split()
 
 
 def search(query):
-    time = ''
+    time=''
     for file in os.listdir('subs/'):
         filePointer = codecs.open('subs/' + file, 'r', 'utf8')
         lines = filePointer.readlines()
@@ -24,8 +23,22 @@ def search(query):
                             break
                         del textFromLines[:]
                     time = textFromLines[0]
+                    # print(line)
                     break
-    print(time)
+    return (time)
+
+def stringToTimedelta(string):
+    timeFormats = string.split(':')
+    time = 0 + int(timeFormats[2].split(',')[0])
+    time += int(timeFormats[1]) * 60
+    time += int(timeFormats[0]) * 3600
+    return ((timedelta(seconds=time)))
 
 
-search('me')
+def getScene(query):
+    for file in os.listdir('sceneCuts/'):
+        with codecs.open('sceneCuts/' + file, 'r', 'utf8') as file:
+            timeFormat = search(query)
+            print(stringToTimedelta(timeFormat))
+
+getScene('Hey')
