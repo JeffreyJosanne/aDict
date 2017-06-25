@@ -11,7 +11,6 @@ for file in os.listdir('subs/'):
     with codecs.open('subs/' + file, 'r', 'utf8') as file:
         sceneCount = 0
         csvWriter = csv.writer(open('sceneCuts/' + file.name.split('/')[1].split('.')[0] + '.csv', 'w'))
-        csvWriter.writerow(['start_time', 'end_time', 'scene'])
         lines = file.readlines()
         for line in lines:
             if '-->' in line:

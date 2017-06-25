@@ -1,11 +1,13 @@
 import os, codecs, re, csv
 from datetime import timedelta
+
+
 def wordIn(word, phrase):
     return word in phrase.split()
 
 
 def search(query):
-    time=''
+    time = ''
     for file in os.listdir('subs/'):
         filePointer = codecs.open('subs/' + file, 'r', 'utf8')
         lines = filePointer.readlines()
@@ -27,21 +29,45 @@ def search(query):
                     break
     return time
 
+
 def stringToTimedelta(string):
     timeFormats = string.split(':')
-    time = 0 + int(timeFormats[2].split(',')[0])
+    time = 0 + int(timeFormats[2])
     time += int(timeFormats[1]) * 60
     time += int(timeFormats[0]) * 3600
     return ((timedelta(seconds=time)))
 
 
+def stringToSeconds(string):
+    timeFormats = string.split(':')
+    time = 0 + int(timeFormats[2])
+    time += int(timeFormats[1]) * 60
+    time += int(timeFormats[0]) * 3600
+    return time
+
+def stringToSecondsWithComma(string):
+    timeFormats = string.split(':')
+    time = 0 + int(timeFormats[2].split(',')[0])
+    time += int(timeFormats[1]) * 60
+    time += int(timeFormats[0]) * 3600
+    return time
+
 def getScene(query):
+    startTime=timedelta(seconds=0)
+    endTime= timedelta(seconds=0)
+    timeFormat = search(query)
+    timeSeconds = stringToSecondsWithComma(timeFormat)
+    print(str(timedelta(seconds=timeSeconds)))
     for file in os.listdir('sceneCuts/'):
-        with csv.DictReader(file, delimiter=',') as reader:
-            timeFormat = search(query)
-            timeToSearch = stringToTimedelta(timeFormat)
-            for line in reader:
-                print(line["first_name"])
+        reader = csv.reader(open('sceneCuts/' + file, 'r'))
+        for row in reader:
+            # print(row)
+            if ((int(row[0])> timeSeconds)&((int(row[1])< timeSeconds))):
+                # print(str(timedelta(seconds=int(row[0])))+'-->'+str(timedelta(seconds=int(row[1]))))
+                startTime = timedelta(seconds=int(row[0]))
+                endTime = timedelta(seconds=int(row[1]))
+        print(str(startTime)+'-->'+str(endTime))
 
 
-getScene('Hey')
+
+getScene('make')
